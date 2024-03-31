@@ -8,9 +8,11 @@ const Header = () => {
 const path=useLocation().pathname;
 
     return (
-        <Navbar className=" text-gray-800">
-            <Link to="/" className='self-center whitespace-norap text-sm sm:text-xl font-semibold'>
-            <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg'> My Idea</span>
+        <Navbar className=" text-gray-800 border-b-2">
+            <Link to="/" className='self-center whitespace-norap text-sm sm:text-xl font-bold'>
+                 <span className='px-2 py-1'> My Idea</span> 
+
+            {/* <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg'> My Idea</span> */}
             </Link>
             <form>
                 <TextInput
@@ -24,9 +26,9 @@ const path=useLocation().pathname;
             </Button>
             
             <div className='flex gap-2 md:order-2'>
-                <Button className='w-12 h-10 hidden sm:inline' color='gray' pill>
+                {/* <Button className='w-12 h-10 hidden sm:inline' color='gray' pill>
                     <FaMoon/>
-                </Button>
+                </Button> */}
                 <Link to="login">
                     <Button gradientDuoTone='purpleToBlue' outline>
                         Login
