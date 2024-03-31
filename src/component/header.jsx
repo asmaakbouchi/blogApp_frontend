@@ -28,7 +28,7 @@ const path=useLocation().pathname;
                     <FaMoon/>
                 </Button>
                 <Link to="login">
-                    <Button gradientDuoTone='purpleToBlue' >
+                    <Button gradientDuoTone='purpleToBlue' outline>
                         Login
                     </Button>
                 </Link>
