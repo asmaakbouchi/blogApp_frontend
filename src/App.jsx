@@ -9,6 +9,8 @@ import Contact from './pages/Contact'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import AddPost from './pages/AddPost'
+import EditPost from './pages/EditPost'
+import PostDetail from './pages/PostDetail'
 
 
 export default function App() {
@@ -21,7 +23,10 @@ export default function App() {
       <Route path='/contact' element={<Contact />}></Route> 
       <Route path='/login' element={<Login />}></Route>
       <Route path='/signup' element={<Signup />}></Route>
-      <Route path='/addpost' element={<AddPost />}></Route>
+      <Route path='/addpost' element={<AddPost />}></Route> 
+      <Route path='/post/:id' element={<PostDetail/>}></Route>
+      <Route path='/edit/:id' element={<EditPost />} />
+      
     </Routes>
     <Footer/>
    </BrowserRouter>

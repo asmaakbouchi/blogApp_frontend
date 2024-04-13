@@ -1,42 +1,48 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import { Alert, Button, Label, TextInput } from 'flowbite-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { LoginStart, LoginSuccess, LoginFailure } from '../redux/user/userSlice';
 
 export default function login() {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
+  const {loading,error:errorMessage}=useSelector(state=>state.users)
+  const dispatch=useDispatch();
   const navigate=useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim()});
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setErrorMessage('Please fill out all fields.');
-      return;
+      return dispatch(LoginFailure('Please fill out all fields.'))
     }
 
     try {
+      dispatch(LoginStart())
       const res = await fetch('http://localhost:3000/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
-      
+      const data = await res.json(); 
+  
       //Handling errors
       if(data.success===false){
-        return setErrorMessage(data.message)
+       dispatch(LoginFailure(data.message))
       }
 
       //if everything is well navigate to login 
-      if(res.ok){ navigate('/')}
-
-
+      if(res.ok){
+        dispatch(LoginSuccess(data))
+         localStorage.setItem('tokenkey',data.token)
+         navigate('/')
+        }
     } catch (err) {
-      setErrorMessage(err.message)
+      dispatch(LoginFailure(err.message))
     }
   };
 
@@ -50,9 +56,9 @@ export default function login() {
           </div>
           <div>
             <Label>Password</Label>
-            <TextInput type='password' placeholder='Password' id='password' onChange={handleChange} />
+            <TextInput type='password' placeholder='*********' id='password' onChange={handleChange} />
           </div>
-          <Button gradientDuoTone='purpleToPink' type='submit'>
+          <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
             Login
           </Button>
           <div className='flex gap-2 text-sm mt-3'>
