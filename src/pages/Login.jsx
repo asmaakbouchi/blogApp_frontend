@@ -7,7 +7,7 @@ import { LoginStart, LoginSuccess, LoginFailure } from '../redux/user/userSlice'
 
 export default function login() {
   const [formData, setFormData] = useState({});
-  const {loading,error:errorMessage}=useSelector(state=>state.users)
+  const {loading,error:errorMessage}=useSelector(state=>state.user)
   const dispatch=useDispatch();
   const navigate=useNavigate();
 

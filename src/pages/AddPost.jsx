@@ -43,7 +43,7 @@ export default function AddPost() {
       }
 
       // If everything is well, navigate to the "about" page
-      navigate('/about');
+      navigate('/myposts');
     } catch (err) {
       setErrorMessage(err.message || 'An error occurred.');
     }
