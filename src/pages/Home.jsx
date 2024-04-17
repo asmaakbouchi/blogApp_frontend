@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import SliderImage from '../component/sliderImage';
 import HomeContent from '../component/homeContent';
 import { fetchPosts } from '../api/post';
-import { fetchUsers } from '../api/user';
+
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState({});
 
   const Posts = async () => {
     try {
@@ -17,18 +16,10 @@ export default function Home() {
       console.error('Error fetching posts:', error);
     }
   };
-  const Users = async () => {
-    try {
-      const data= await fetchUsers()
-      setUsers(data);
-    } catch (error) {
-      console.error('Error fetching userss:', error);
-    }
-  };
+
 
   useEffect(() => {
     Posts(); // Fetch posts 
-    Users(); // Fetch users
   }, []);
 
   return (
@@ -45,7 +36,7 @@ export default function Home() {
               <p className="text-gray-700 text-base">{`${post.contenu.substring(0, 60)} [...]`}</p>
             </div>
             <div className="px-6 py-4">
-              <p className="text-black">Created By <span className='font-semibold'>{users[post.auteur]}</span></p>
+              <p className="text-black">Created By <span className='font-semibold'>{post.auteur?.name}</span></p>
             </div>
           </Link>
         ))}

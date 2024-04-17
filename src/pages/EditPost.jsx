@@ -68,8 +68,9 @@ export default function EditPost() {
   };
 
   return (
-    <div className='min-h-screen mt-20'>
-      <div className='p-4 max-w-2xl mx-auto'>
+    <div className='min-h-screen flex items-center justify-center bg-gray-100'>
+    <div className='max-w-xl w-full p-8 bg-white border border-gray-300 rounded-lg shadow-lg'>
+      <h2 className='text-2xl font-bold mb-4 text-pink-500 text-center'>Edit post</h2>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           <div>
             <Label>Title</Label>

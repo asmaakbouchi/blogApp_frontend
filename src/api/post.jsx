@@ -14,6 +14,7 @@ try {
 }
 }
 
+
 const fetchPosts=async()=>{
     try {
       const response = await fetch('http://localhost:3000/posts');
@@ -27,4 +28,24 @@ const fetchPosts=async()=>{
     }
   }
 
-  export{fetchPosts,FetchPostById}
+  const DeletePost = async (id, token) => {
+    try {
+      const response = await fetch(`http://localhost:3000/posts/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'auth': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete post');
+      }
+      console.log('Post deleted');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      throw error;
+    }
+  };
+
+
+
+  export{fetchPosts,FetchPostById,DeletePost}

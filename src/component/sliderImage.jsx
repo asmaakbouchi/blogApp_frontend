@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'flowbite-react';
-import img_mindset from '../assets/image/mindset.jpg';
+import img_mindset from '../assets/image/world.jpg';
 import { Link } from 'react-router-dom';
 
 export default function sliderImage() {

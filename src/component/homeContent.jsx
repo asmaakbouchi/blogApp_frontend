@@ -5,7 +5,7 @@ export default function HomeContent() {
   return (
     <div className="max-w-6xl my-2 mx-auto px-4 py-10">
 
-      <h2 className="text-3xl font-bold mb-8 text-center text-indigo-600 ">Description about Our Blog</h2>
+      <h2 className="text-3xl font-bold mb-8 text-center text-indigo-600" >Description about Our Blog</h2>
       <div className="flex flex-col md:flex-row items-center justify-center">
         {/* Image Section */}
         <div className="md:w-1/2 md:mr-8 mb-4 md:mb-0">
