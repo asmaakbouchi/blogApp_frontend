@@ -17,9 +17,9 @@ export default function sliderImage() {
                     <div className="text-white">
                         <h2 className="mb-4 text-4xl font-semibold">Welcome to Our Blog</h2>
                         <h4 className="mb-6 text-xl font-semibold">Discover the Latest Insights</h4>
-                        <Link to={'/signup'}>
+                        <Link to={'/contact'}>
                             <Button gradientDuoTone='purpleToPink' className='border-neutral-50 px-7 pb-[8px] pt-[10px] ml-[80px] text-sm font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out hover:border-neutral-100 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-neutral-100 focus:border-neutral-100 focus:text-neutral-100 focus:outline-none focus:ring-0 active:border-neutral-200 active:text-neutral-200 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10'>
-                                Sign Up Now
+                                Contact Us
                             </Button> 
                         </Link>
                     </div>

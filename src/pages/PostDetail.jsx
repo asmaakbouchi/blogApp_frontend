@@ -1,26 +1,29 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { FetchPostById } from '../api/post';
 
 export default function PostDetail() {
   const { id } = useParams();
   console.log("id", id);
   const [post, setPost] = useState({});
 
-  useEffect(() => {
-    axios.get(`http://localhost:3000/posts/${id}`, {
-      headers: {
-        'auth': `Bearer ${localStorage.getItem('tokenkey')}`
-      }
-    })
-      .then(res => {
-        setPost(res.data);
-      })
-      .catch(error => {
-        console.error('Error fetching post:', error);
-      });
-  }, [id]);
+  const PostById = async () => {
+    try {
+      const fetchedPost = await FetchPostById(id)
+      setPost(fetchedPost);
+    } catch (error) {
+      console.error('Error fetching post:', error);
+    }
+  };
 
+
+
+  useEffect(() => {
+    PostById();
+  }
+  , [id]);
+  
   // Check if post.date exists before accessing its properties
   const formattedDate = post.date ? post.date.split('T')[0] : '';
   const formattedTime = post.date ? post.date.split('T')[1].substring(0, 8) : '';

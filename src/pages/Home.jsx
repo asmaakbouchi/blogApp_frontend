@@ -2,36 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SliderImage from '../component/sliderImage';
 import HomeContent from '../component/homeContent';
+import { fetchPosts } from '../api/post';
+import { fetchUsers } from '../api/user';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState({});
 
-  useEffect(() => {
-    // Fetch posts
-    fetch('http://localhost:3000/posts')
-      .then(response => response.json())
-      .then(data => setPosts(data))
-      .catch(error => console.error('Error fetching blog posts:', error));
+  const Posts = async () => {
+    try {
+      const data = await fetchPosts()
+      setPosts(data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+  const Users = async () => {
+    try {
+      const data= await fetchUsers()
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching userss:', error);
+    }
+  };
 
-    // Fetch users
-    fetch('http://localhost:3000/users')
-      .then(response => response.json())
-      .then(data => {
-        // Map user IDs to names
-        const usersData = {};
-        data.forEach(user => {
-          usersData[user._id] = user.name; // Assuming the user object has a 'name' field
-        });
-        setUsers(usersData);
-      })
-      .catch(error => console.error('Error fetching users:', error));
+  useEffect(() => {
+    Posts(); // Fetch posts 
+    Users(); // Fetch users
   }, []);
 
   return (
     <>
       <SliderImage />
       <HomeContent />
+      <h2 className="text-3xl font-bold mb-8 text-center text-indigo-600 ">Discovering posts</h2>
       <div className='grid grid-cols-1 px-5 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto my-10'>
         {posts.map(post => (
           <Link to={`/post/${post._id}`} className='max-w-sm rounded overflow-hidden shadow-lg flex flex-col' key={post._id}>

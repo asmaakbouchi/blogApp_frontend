@@ -1,15 +1,22 @@
 import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { fetchProfil } from '../api/user';
 
-export default function About() {
-  const navigate = useNavigate();
+export default function Myposts() {
   const token = localStorage.getItem('tokenkey');
   const [blogPosts, setBlogPosts] = useState([]);
+  const [userdata, setUserdata] = useState({});
   const [users, setUsers] = useState({});
-  const [loggedInUserId, setLoggedInUserId] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!token);
- 
+
+  const fetchUserData = async () => {
+    try {
+      const data = await fetchProfil();
+      setUserdata(data);
+    } catch (error) {
+      console.error('Error fetching user data', error);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -29,32 +36,26 @@ export default function About() {
   };
 
   const fetchUsers = async () => {
-      const response = await fetch('http://localhost:3000/users')
-      .then(response => response.json())
-      .then(data => {
-          const usersData = {};
-          data.forEach(user => {
-              usersData[user._id] = user;
-          });
-          setUsers(usersData);
-      })
-      .catch(error => console.error('Error fetching users data:', error));
-    }
-
-    const decoded=()=>{
-    // Decode the token and set the logged-in user ID
     try {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      setLoggedInUserId(decodedToken._id);
+        const response = await fetch('http://localhost:3000/users');
+        if (!response.ok) {
+            throw new Error('Failed to fetch users data');
+        }
+        const data = await response.json();
+        const usersData = {};
+        data.forEach(user => {
+            usersData[user._id] = user;
+        });
+        setUsers(usersData);
     } catch (error) {
-      console.error('Error decoding token:', error);
+        console.error('Error fetching users data:', error);
     }
-    }
+}
 
   useEffect(() => {
     fetchPosts();
     fetchUsers();
-    decoded();
+    fetchUserData()
   }, []);
 
   const handleDelete = async (id) => {
@@ -78,19 +79,20 @@ export default function About() {
     }
   };
 
-  const userPosts = blogPosts.filter(post => post.auteur === loggedInUserId);
+  const userPosts = blogPosts.filter(post => post.auteur === userdata._id);
   return ( 
-    <div>
-     <div className="flex flex-col sm:flex-row justify-between items-center mt-8 max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold  sm:mb-0">My Blogs</h1>
-        <Link to="/addPost">
-          <Button  className='mt-4' gradientDuoTone='purpleToPink'>
-            Add New Post
-          </Button>
-        </Link>
-      </div>
+    <div> <div className="container mx-auto px-4 py-8 my-6">
+      
+        <div className="flex flex-col md:flex-row justify-between items-center mt-8 max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold mb-4 md:mb-0">My Blogs</h1>
+          <Link to="/addPost">
+            <Button className='md:mt-0' gradientDuoTone='purpleToPink'>
+              Add New Post
+            </Button>
+          </Link>
+        </div>
       {userPosts.length > 0 ? (
-        <div className="container mx-auto px-4 py-8 my-6">
+       
           <div className="grid grid-cols-1 px-5 sm:grid-cols-2 md:grid-cols-3 gap-7 max-w-6xl mx-auto my-10">
             {userPosts.map(post => (
               <div key={post._id} className="max-w-sm rounded overflow-hidden shadow-lg flex flex-col">
@@ -101,7 +103,7 @@ export default function About() {
                   <div className="py-4">
                     <p className="text-black">Date creation: <span className='font-semibold'>{post.date.split('T')[0]}</span></p>
                     <p className="text-black">Time creation: <span className='font-semibold'>{post.date.split('T')[1].substring(0, 8)}</span></p>
-                    <p className="text-black">auteur: <span className='font-semibold'>{users[post.auteur].name }</span></p>
+                    <p className="text-black">auteur: <span className='font-semibold'>{users[post.auteur]?.name }</span></p>
                   </div>
                 </div>
                 <div className="px-6 py-4">
@@ -113,10 +115,10 @@ export default function About() {
               </div>
             ))}
           </div>
-        </div>
+       
       ) : (
         <p className="text-gray-600 m-40 text-center text-4xl">No posts available</p>
-      )}
+      )} </div>
     </div>
   );
 }

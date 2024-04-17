@@ -12,6 +12,7 @@ import Signup from './pages/Signup'
 import AddPost from './pages/AddPost'
 import EditPost from './pages/EditPost'
 import PostDetail from './pages/PostDetail'
+import Profil from './pages/Profil'
 
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
       <Route path='/addpost' element={<AddPost />}></Route> 
       <Route path='/post/:id' element={<PostDetail/>}></Route>
       <Route path='/edit/:id' element={<EditPost />} />
+      <Route path='/profil' element={<Profil/>}></Route>
       
     </Routes>
     <Footer/>
