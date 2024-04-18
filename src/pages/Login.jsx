@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, TextInput } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginStart, LoginSuccess, LoginFailure } from '../redux/user/userSlice';
+import { LoginStart, LoginSuccess, LoginFailure } from '../redux/reducer/userSlice';
 
-export default function Login() {
-  const [formData, setFormData] = useState({});
-  const { loading, error: errorMessage } = useSelector(state => state.user);
+const Login = () => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const { loading, error: errorMessage, isAuthenticated } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log('login ',isAuthenticated)
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -16,7 +23,8 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
+    const { email, password } = formData;
+    if (!email || !password) {
       return dispatch(LoginFailure('Please fill out all fields.'));
     }
 
@@ -29,12 +37,10 @@ export default function Login() {
       });
       const data = await res.json();
 
-      // Handling errors
       if (!data.success) {
         dispatch(LoginFailure(data.message));
       }
 
-      // if everything is well navigate to login
       if (res.ok) {
         dispatch(LoginSuccess(data));
         localStorage.setItem('tokenkey', data.token);
@@ -44,19 +50,19 @@ export default function Login() {
       dispatch(LoginFailure(err.message));
     }
   };
-
+  
   return (
     <div className='min-h-screen flex items-center justify-center bg-gray-100'>
-    <div className='max-w-xl w-full p-8 bg-white border border-gray-300 rounded-lg shadow-lg'>
-      <h2 className='text-2xl font-bold mb-4 text-pink-500 text-center'>Login</h2>
+      <div className='max-w-xl w-full p-8 bg-white border border-gray-300 rounded-lg shadow-lg'>
+        <h2 className='text-2xl font-bold mb-4 text-pink-500 text-center'>Login</h2>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           <div>
             <Label>Email</Label>
-            <TextInput type='email' placeholder='Email' id='email' onChange={handleChange} />
+            <TextInput type='email' placeholder='Email' id='email' value={formData.email} onChange={handleChange} />
           </div>
           <div>
             <Label>Password</Label>
-            <TextInput type='password' placeholder='*********' id='password' onChange={handleChange} />
+            <TextInput type='password' placeholder='*********' id='password' value={formData.password} onChange={handleChange} />
           </div>
           <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
             Login
@@ -67,7 +73,6 @@ export default function Login() {
               Sign Up
             </Link>
           </div>
-
           {errorMessage && (
             <Alert className='mt-5' color='failure'>
               {errorMessage}
@@ -77,4 +82,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

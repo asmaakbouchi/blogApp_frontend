@@ -1,16 +1,20 @@
-import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
-//import { useSelector } from 'react-redux';
+import React, { Fragment } from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const isLoggedIn = localStorage.getItem('tokenkey')
-
-  return (
-    <Route
-      {...rest}
-      element={isLoggedIn ? <Component /> : <Navigate to="/login" />}
-    />
-  );
+const ProtectedRoute = ({ component: Component, ...routeProps }) => {
+    const { loading, isAuthenticated } = useSelector((state) => state.user);
+    if (!loading && isAuthenticated === false) {
+        console.log("Auto", isAuthenticated);
+        return <Navigate to="/login" />;
+    }
+    return (
+        <Fragment>
+            {loading === false ? (
+                <Component {...routeProps} />
+            ) : null}
+        </Fragment>
+    );
 };
 
 export default ProtectedRoute;

@@ -2,20 +2,20 @@ import { Avatar, Button, Dropdown, Navbar, NavbarToggle, TextInput } from 'flowb
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate} from 'react-router-dom';
 import { AiOutlineSearch} from 'react-icons/ai';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { jwtDecode } from 'jwt-decode';
 import { fetchProfil } from '../api/user';
+import { Logout} from '../redux/reducer/userSlice';
+
 
 
 const Header = () => {
-
 const path=useLocation().pathname;
 const navigate = useNavigate(); 
 const [userConnected, setUserConnected] = useState(null);
-
-// const currentUser = useSelector(state => state.user);
-//console.log("this is current user ",currentUser?.name);
-console.log("this is current user ",userConnected?.name);
+const dispatch = useDispatch();
+// const currentUser = useSelector(state => state.user.currentUser);
+// console.log("this is current user redux ",currentUser?.name);
 
 const fetchUserData = async () => {
     try {
@@ -28,11 +28,11 @@ const fetchUserData = async () => {
 
 useEffect(()=>{fetchUserData()},[]);
 
-
 const isAuth = () => {
     const token = localStorage.getItem('tokenkey');
     if (token) {
       const decodedToken = jwtDecode(token);
+      //console.log(decodedToken);
       const currentTime = Date.now() / 1000; // Convert to seconds
       if (decodedToken.exp < currentTime) {
         console.log('Token expired');
@@ -41,15 +41,17 @@ const isAuth = () => {
       return true;
     }
      else {
-      console.log('try to login ');
+      console.log('try to login');
       return false;
     }
 };
 
-const Logout = () => {
+const handlLogout = () => {
+    dispatch(Logout());
     localStorage.removeItem('tokenkey');
     navigate('/login');
   };
+
     return (
         <Navbar className=" text-gray-800 gradient-to-r from-indigo-500 via- to-pink-500 ">
             <Link to="/" className='self-center whitespace-norap text-sm sm:text-xl font-bold'>
@@ -70,7 +72,6 @@ const Logout = () => {
             <div className='flex gap-2 md:order-2'>
              {
              isAuth()?(
-
                 <div className='flex items-center justify-between border-2 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 rounded-3xl px-2 py-1'>
                 {/* Avatar and Dropdown */}
                 <div className='flex items-center'>
@@ -79,14 +80,12 @@ const Logout = () => {
                             <Dropdown.Header>Profile</Dropdown.Header>
                         </Link>
                         <Dropdown.Divider/> 
-                        <Dropdown.Item onClick={Logout}>Log out</Dropdown.Item>
+                        <Dropdown.Item onClick={handlLogout}>Log out</Dropdown.Item>
                     </Dropdown>
                     {/* User's name */}
                     <p className='ml-2 font-semibold text-white'>{userConnected?.name}</p>
                 </div>
-            </div>
-            
-                                    
+            </div>                 
                 ):
                 (
                     <Link to="login">
